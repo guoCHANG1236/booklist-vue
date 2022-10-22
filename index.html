@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+     .grid{
+         margin: auto;
+         width: 500px;
+         text-align: center;
+     }
+     .grid table{
+         width: 100%;
+         border-collapse: collapse;
+     }
+     .grid th,td{
+         padding: 10;
+         border: 1px dashed orange;
+         height: 35px;
+         line-height: 35px;
+     }
+     .grid thead{
+         background-color: orange;
+     }
+     .grid .book{
+         padding: 10px 0;
+     }
+     .grid .book input{
+         width: 150px;
+     }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="grid">
+            <div>
+                <h1>图书管理</h1>
+                <div class="book">
+                    <label>编号：<input type="text" id="id" v-model='id' :disabled="flag"></label>
+                    <label>名称：<input type="text" id="name" v-model='name'></label>
+                    <button @click='handle'>提交</button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr :key='item.id' v-for ='item in books'>
+                        <th>{{item.id}}</th>
+                        <th>{{item.name}}</th>
+                        <th>{{item.date}}</th>
+                        <th>
+                            <a href="" @click.prevent @click = 'modify(item.id)'>修改</a>
+                            <span>|</span>
+                            <a href="" @click.prevent>删除</a>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="./vue.js"></script>
+    <script>
+      var vm = new Vue({
+          el:'#app',
+          data:{
+              flag:false,
+              id:'',
+              name:'',
+              books:[{
+                  id: 1,
+                  name: '三国演义',
+                  date:''
+                  },{
+                  id: 2,
+                  name: '水浒传',
+                  date:''
+                  },{
+                  id: 3,
+                  name: '西游记',
+                  date:''
+                  },{
+                  id: 4,
+                  name: '红楼梦',
+                  date:''
+              }]
+            },
+           methods:{
+               handle:function(){
+                   if(this.flag){
+                       this.books.some((item)=>{
+                           if(item.id == this.id){
+                               item.name = this.name;
+                               return true;                            
+                           }
+                        })
+                        this.flag = false;                        
+                   }else{
+                    var book = {};
+                   book.id = this.id;
+                   book.name = this.name;
+                   book.data = '';
+                   this.book = this.books.push(book);  
+                   }
+                   this.id = '';
+                   this.name = '';
+                   
+               },
+               modify:function(id){
+                   this.flag = true;
+                   var book = this.books.filter(function(item){
+                      return item.id == id
+                   })
+                   this.id = book[0].id;
+                   this.name = book[0].name;
+               }
+            } 
+      })
+    
+    
+    </script>
+</body>
+</html>
